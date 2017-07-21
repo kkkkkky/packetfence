@@ -95,8 +95,8 @@ function changeInputFromTemplate(oldInput, template, keep_value) {
  * Initialize the rendering widgets of some elements
  */
 function initWidgets(elements) {
-    elements.filter('.chzn-select').chosen();
-    elements.filter('.chzn-deselect').chosen({allow_single_deselect: true});
+    elements.filter('.chzn-select').chosen({width: ''});
+    elements.filter('.chzn-deselect').chosen({allow_single_deselect: true, width: ''});
     elements.filter('.timepicker-default').each(function() {
         // Keep the placeholder visible if the input has no value
         var defaultTime = $(this).val().length? 'value' : false;
@@ -1004,10 +1004,10 @@ $(function () { // DOM ready
         $('#section').find('.sidenav-section').each(function() {
             if (this.id && sidenav.find('#' + this.id).length > 0)
                 // Section is already there; show it
-                sidenav.find('#' + this.id).show();
+                sidenav.find('#' + this.id).removeClass('hide');
             else {
                 // Append section
-                $(this).detach().appendTo(sidenav).show();
+                $(this).detach().appendTo(sidenav).removeClass('hide');
             }
         });
     });
@@ -1153,15 +1153,17 @@ FingerbankSearch.setup = function() {
           e.preventDefault();
           var id;
           var display;
-          console.log(search);
           $.each(search.results, function(){
             if(this.display == search.typeahead_field.val()){
               id = this.id;
               display = this.display;
             }
           });
-          if(search.add_action) {
-            eval(search.add_action + "(search,id,display)");
+          if (search.add_action) {
+            if (search.add_action == 'violationsView.add_fingerbank_trigger')
+              violationsView.add_fingerbank_trigger(search, id, display);
+            else
+              console.warn("Unhandled add-action \"" + search.add_action + "\"");
           }
           else {
             if(display !== undefined) {
