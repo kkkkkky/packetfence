@@ -145,6 +145,11 @@ NodeView.prototype.readNode = function(e) {
         success: function(data) {
             $('body').append(data);
             var modal = $("#modalNode");
+            /* Ability to track submitted button (multihost feature) */
+            modal.find("form button[type=submit]").click(function() {
+                $(this, $(this).parents("form")).removeAttr("clicked");
+                $(this).attr("clicked", "true");
+            });
             modal.modal({ show: true });
         },
         errorSibling: section.find('h2').first()
@@ -154,8 +159,8 @@ NodeView.prototype.readNode = function(e) {
 NodeView.prototype.showNode = function(e) {
     var that = this;
     var modal = $("#modalNode");
-    modal.find('.chzn-select').chosen();
-    modal.find('.chzn-deselect').chosen({allow_single_deselect: true});
+    modal.find('.chzn-select').chosen({width: ''});
+    modal.find('.chzn-deselect').chosen({allow_single_deselect: true, width: ''});
     modal.find('.timepicker-default').each(function() {
         // Keep the placeholder visible if the input has no value
         var $this = $(this);
